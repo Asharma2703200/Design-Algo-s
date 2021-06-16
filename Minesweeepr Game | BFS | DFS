@@ -1,0 +1,48 @@
+class Solution {
+    private int m, n;
+    private int[][] directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
+    public char[][] updateBoard(char[][] board, int[] click) {
+        //using dfs or bfs to search
+        //if it is M, change it to X and stop immediately
+        //if it is E, if its 8 adjacents has M, change it to '1' to '8'
+        //            if its 8 adjacents does not have M, change it to B and recursively reveal its adjacents
+        m = board.length;
+        n = board[0].length;
+        dfs(board, click[0], click[1]);
+        return board;
+    }
+    
+    private void dfs(char[][] board, int x, int y) {
+        if (outOfBound(x, y)) return;
+        if (board[x][y] == 'M') {
+            board[x][y] = 'X';
+            return;
+        } else if (board[x][y] == 'E'){
+            int num = numOfM(board, x, y);
+            if (num > 0) {
+                board[x][y] = (char) (num + '0');
+            } else {
+                board[x][y] = 'B';
+                for (int[] d : directions) {
+                    dfs(board, x + d[0], y + d[1]);
+                }
+            }
+        }
+    }
+    
+    private boolean outOfBound(int x, int y) {
+        return x < 0 || x >= m || y < 0 || y >= n;
+    }
+    
+    private int numOfM(char[][] board, int x, int y) {
+        int num = 0;   
+        for (int i = x - 1; i <= x + 1; i++) {
+            for (int j = y - 1; j <= y + 1; j++) {
+                if (!outOfBound(i, j) && board[i][j] == 'M') {
+                    num += 1;
+                }
+            }   
+        }
+        return num;
+    }
+}
