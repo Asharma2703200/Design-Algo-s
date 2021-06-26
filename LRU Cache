@@ -1,0 +1,36 @@
+class LRUCache {
+
+    ArrayDeque<Integer> dq;
+    HashMap<Integer, Integer> map = new HashMap<>();
+    int capacity = 0;
+    
+    public LRUCache(int capacity) {
+        this.capacity = capacity;
+        dq = new ArrayDeque<>(capacity);        
+    }
+    
+    public int get(int key) {
+        if(!map.containsKey(key))
+            return -1;
+        else{
+            dq.remove(key);
+            dq.addFirst(key);
+            return map.get(key);
+        }
+    }
+    
+    public void put(int key, int value) {
+        if(map.containsKey(key)){
+            dq.remove(key);
+            dq.addFirst(key);
+        } else{
+            if(dq.size() == this.capacity){
+                int lkey = dq.removeLast();
+                map.remove(lkey);        
+            }
+            dq.addFirst(key);
+        }
+        
+        map.put(key, value);
+    }
+}
