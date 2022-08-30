@@ -1,0 +1,72 @@
+class MyHashSet {
+    private static final int SIZE = 10007; // prime number larger than 10000 (not memory efficient)
+    private final Element[] set;
+
+    /** Initialize your data structure here. */
+    public MyHashSet() {
+        set = new Element[SIZE];
+    }
+    
+    public void add(int key) {
+        int index = hash(key);
+        Element head = set[index];
+        Element element = head;
+        while (element != null) {
+            if (element.key == key) { // key is already present
+                return;
+            }
+            element = element.next;
+        }
+
+        // key is not already present in the set
+        Element newElement = new Element(key);
+        newElement.next = head;
+        set[index] = newElement;
+    }
+    
+    public void remove(int key) {
+        int index = hash(key);
+        Element trailing = set[index];
+        Element element = set[index];
+        while (element != null) {
+            if (element.key == key) {
+                if (trailing == element) {
+                    set[index] = element.next;
+                } else {
+                    trailing.next = element.next;
+                }
+                return;
+            }
+            trailing = element;
+            element = element.next;
+        }
+    }
+    
+    /** Returns true if this set contains the specified element */
+    public boolean contains(int key) {
+        int index = hash(key);
+        Element element = set[index];
+        while (element != null) {
+            if (element.key == key) { // key is present
+                return true;
+            }
+            element = element.next;
+        }
+
+        return false;
+    }
+
+    private int hash(int key) {
+        return Integer.hashCode(key) % SIZE;
+    }
+
+    private static class Element {
+        final int key;
+        Element next;
+
+        public Element(int key) {
+            this.key = key;
+        }
+    }
+
+}
